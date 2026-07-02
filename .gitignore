@@ -1,18 +1,17 @@
-# 平台构建产物
+# ============================
+# 构建产物
+# ============================
+
+# PlatformIO 构建输出
 .pio/
 build/
 
-# IDE 配置（各 IDE 各自管理）
-.idea/
-.vscode/
-*.code-workspace
-
-# 固件产物
+# 固件文件（按需保留，按需提交）
 *.hex
 *.bin
 *.elf
 
-# 编译中间文件
+# SDCC/Keil 编译中间文件
 *.rel
 *.lst
 *.lnp
@@ -23,23 +22,46 @@ build/
 *.asm
 *.cdb
 *.reg
+*.scat
+*.lnk
+*.rst
 idedata.json
 
+# 编译命令数据库（PlatformIO 自动生成，clangd 使用）
+compile_commands.json
+
+# ============================
+# IDE 配置（各自环境不同）
+# ============================
+
+# JetBrains 系列
+.idea/
+
+# VSCode 工作区文件（多工程入口）
+*.code-workspace
+
+# Trae IDE 内部缓存
+.trae/skills/shared/__pycache__/
+
+# ============================
+# 工具链本地安装
+# ============================
+.toolchain/
+.tools/
+
+# ============================
 # OS 临时文件
+# ============================
 .DS_Store
 Thumbs.db
 *.swp
 *.swo
 *~
 
+# ============================
 # Python 字节码
+# ============================
 __pycache__/
 *.pyc
 *.pyo
-
-# Trae/Trae AI 缓存
-.trae/skills/shared/__pycache__/
-
-# 工具链本地安装（各自环境不同步）
-.toolchain/
-.tools/
+*.pyd
