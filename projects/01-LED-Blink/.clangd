@@ -1,0 +1,26 @@
+CompileFlags:
+  CompilationDatabase: .
+  Add:
+    - "-std=c99"
+    - "-target"
+    - "mcs51"
+  Remove:
+    - "-Og"
+    - "-g2"
+    - "-ggdb2"
+    - "-DHEAP_SIZE=*"
+    - "-DPLATFORMIO=*"
+    - "-DSTC89C5XRX"
+    - "-DNAKED_ARCH_MCS51"
+    - "-DNAKED_MCS51_STC89C5XRX"
+    - "-D__PLATFORMIO_BUILD_DEBUG__"
+
+InlayHints:
+  Enabled: No
+
+Diagnostics:
+  ClangTidy:
+    Add: ["readability-*, modernize-*, performance-*, bugprone-*"]
+    Remove: ["modernize-use-trailing-return-type"]
+  UnusedIncludes: Strict
+  MissingIncludes: Yes

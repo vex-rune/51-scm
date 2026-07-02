@@ -1,0 +1,14 @@
+[
+    {
+        "command": "C:\\Users\\luke\\.platformio\\packages\\toolchain-sdcc\\bin\\sdcc.exe -o .pio\\build\\stc89c52rc\\src\\delay.rel -c --std-sdcc11 --peep-return -mmcs51 --stack-size 16 --model-small --opt-code-size -Og -g2 -ggdb2 -DF_CPU=11059200L -DHEAP_SIZE=128 -DPLATFORMIO=60119 -DSTC89C5XRX -DSTC89C52RC -DNAKED_ARCH_MCS51 -DNAKED_MCS51_STC89C5XRX -DSTC89C52RC -D__PLATFORMIO_BUILD_DEBUG__ -Isrc src\\delay.c",
+        "directory": "D:\\project\\51-scm\\projects\\01-LED-Blink",
+        "file": "src\\delay.c",
+        "output": ".pio\\build\\stc89c52rc\\src\\delay.rel"
+    },
+    {
+        "command": "C:\\Users\\luke\\.platformio\\packages\\toolchain-sdcc\\bin\\sdcc.exe -o .pio\\build\\stc89c52rc\\src\\main.rel -c --std-sdcc11 --peep-return -mmcs51 --stack-size 16 --model-small --opt-code-size -Og -g2 -ggdb2 -DF_CPU=11059200L -DHEAP_SIZE=128 -DPLATFORMIO=60119 -DSTC89C5XRX -DSTC89C52RC -DNAKED_ARCH_MCS51 -DNAKED_MCS51_STC89C5XRX -DSTC89C52RC -D__PLATFORMIO_BUILD_DEBUG__ -Isrc src\\main.c",
+        "directory": "D:\\project\\51-scm\\projects\\01-LED-Blink",
+        "file": "src\\main.c",
+        "output": ".pio\\build\\stc89c52rc\\src\\main.rel"
+    }
+]
