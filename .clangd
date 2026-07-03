@@ -4,6 +4,9 @@ CompileFlags:
     - "-std=c99"
     - "-target"
     - "mcs51"
+    - "-Isrc/01-led"
+    - "-Isrc/02-display"
+    - "-Isrc/include"
   Remove:
     - "-Og"
     - "-g2"

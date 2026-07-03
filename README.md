@@ -21,7 +21,16 @@
 
 ### 新增子工程
 
-在 `projects/` 下新建目录，放入 `platformio.ini` 即可，PlatformIO 自动识别。
+在 `projects/` 下新建目录（如 `02-Button-Input`），放入 `platformio.ini`（定义 `[env:02-button]`）即可，PlatformIO 自动识别。
+
+每个子项目的环境名建议与目录名关联，如：
+- `projects/01-LED-Blink/` → `[env:01-led]`
+- `projects/02-Button-Input/` → `[env:02-button]`
+
+构建时进入对应子目录执行：
+```bash
+cd projects/01-LED-Blink && pio run
+```
 
 ## 项目概述
 
@@ -182,3 +191,8 @@ pio run --target upload
 2. 烧录程序时请先断开电源，再连接串口线
 3. 下载程序后请重新上电复位
 4. 涉及硬件操作时，请确认电路连接正确
+
+
+# 仿真
+[SimuIIde](https://simulide.com/p/)
+![alt text](image.png)
