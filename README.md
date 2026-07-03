@@ -24,8 +24,8 @@
 在 `projects/` 下新建目录（如 `02-Button-Input`），放入 `platformio.ini`（定义 `[env:02-button]`）即可，PlatformIO 自动识别。
 
 每个子项目的环境名建议与目录名关联，如：
-- `projects/01-LED-Blink/` → `[env:01-led]`
-- `projects/02-Button-Input/` → `[env:02-button]`
+- `projects/01-LED-Blink/` -> `[env:01-led]`
+- `projects/02-Button-Input/` -> `[env:02-button]`
 
 构建时进入对应子目录执行：
 ```bash
@@ -110,7 +110,7 @@ pip install platformio
 ### 3. 打开项目
 
 ```
-文件 → 打开文件夹 → 选择 d:\project\51-scm
+文件 -> 打开文件夹 -> 选择 d:\project\51-scm
 ```
 
 ### 4. 首次构建（生成 compile_commands.json）
@@ -154,7 +154,7 @@ pio run --target upload
 | clangd 报红（SFR 未定义） | 正常，clangd 不认识 8051 SFR，不影响编译 |
 | `pio: command not found` | 重启 VSCode，或用完整路径 `~/.platformio/penv/Scripts/pio.exe` |
 | 首次构建很慢 | 正常，PlatformIO 需要下载 SDCC 工具链（约 50MB） |
-| clangd 补全不生效 | 确认已安装 clangd 扩展，执行 `Ctrl+Shift+P` → `clangd: Restart Language Server` |
+| clangd 补全不生效 | 确认已安装 clangd 扩展，执行 `Ctrl+Shift+P` -> `clangd: Restart Language Server` |
 
 ## 项目列表
 

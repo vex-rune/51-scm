@@ -1,6 +1,6 @@
 /*
  * File:    display.h
- * Project: 02-8digit-display
+ * Project: 03-countdown
  * MCU:     STC89C52RC (11.0592 MHz)
  * Tool:    PlatformIO + SDCC
  * Brief:   8位数码管显示驱动头文件
@@ -63,6 +63,7 @@ extern unsigned char display_buf[DISPLAY_DIGITS];
 
 /**
  * @brief  初始化显示驱动（IO 方向、定时器0）
+ * @note   占用定时器0，配置为 2ms 中断，用于动态扫描
  */
 void Display_Init(void);
 
@@ -74,14 +75,8 @@ void Display_Init(void);
 void Display_SetDigit(unsigned char pos, unsigned char value);
 
 /**
- * @brief  显示有符号整数（支持负数，最高位显示'-'）
- * @param  num  要显示的数字（-9999999 ~ 99999999）
- */
-void Display_ShowInt(long num);
-
-/**
- * @brief  显示无符号整数
- * @param  num  要显示的数字（0 ~ 99999999）
+ * @brief  显示无符号整数（支持 0 ~ 99999999）
+ * @param  num  要显示的数字
  */
 void Display_ShowUInt(unsigned long num);
 
