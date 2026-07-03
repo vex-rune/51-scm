@@ -36,9 +36,14 @@ compile_commands.json
 
 # JetBrains 系列
 .idea/
+.vscode/
 
 # VSCode 工作区文件（多工程入口）
 *.code-workspace
+
+# VSCode 自动生成文件（含本地路径，不应提交）
+.vscode/launch.json
+.vscode/c_cpp_properties.json
 
 # Trae IDE 内部缓存
 .trae/skills/shared/__pycache__/
