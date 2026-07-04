@@ -76,4 +76,22 @@ void Matrix_PlayAnimation(const unsigned char *frames,
                           unsigned char frame_count,
                           unsigned int  interval_ms);
 
+/**
+ * @brief  初始化滚动模块 (调用 Matrix_PlayScroll 前调用一次)
+ */
+void Matrix_ScrollInit(void);
+
+/**
+ * @brief  播放字模数组的滚动效果 (从右往左)
+ * @param  font         字模数据, 8xN 字节, N 个字符, 每个字符 8 字节 (在 ROM)
+ * @param  char_count   字模中的字符数
+ * @param  speed_ms     每步间隔 (毫秒), 越小越快
+ * @note   阻塞函数, 调用期间点阵仍正常扫描
+ *         字模格式: [c0r0, ..., c0r7, c1r0, ...] 顺序排列
+ *         例如: 17 字符 = 136 字节
+ */
+void Matrix_PlayScroll(const unsigned char __code *font,
+                       unsigned char char_count,
+                       unsigned int speed_ms);
+
 #endif /* __MATRIX_H__ */
