@@ -19,13 +19,21 @@ extern void DelayMs(unsigned int ms);
 
 void main(void)
 {
-    /* 关闭所有 LED 初始态 */
-    P1 = 0xFF;
-
-    while (1) {
-        LED_PIN = 0;     /* 点亮 LED */
-        DelayMs(500);
-        LED_PIN = 1;     /* 熄灭 LED */
-        DelayMs(500);
+    unsigned char led_mask = 0xFE;  // 11111110，最低位点亮
+    while (1)
+    {
+        // 如果都不亮了，就重新从最低位开始点亮
+        if (led_mask == 0xFF)
+        {
+            led_mask = 0xFE;
+        }
+        // 循环8个IO口依次点亮流水灯
+        for (unsigned char i = 0; i < 8; i++)
+        {
+            P0 = led_mask;
+            DelayMs(500);
+            // 左移一位，高位补1，实现下一个灯亮
+            led_mask = (led_mask << 1) | 0x01;
+        }
     }
 }
