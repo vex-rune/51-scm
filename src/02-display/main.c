@@ -13,6 +13,12 @@
 /* 延时函数声明（复用 01-LED-Blink 的 delay.c） */
 extern void DelayMs(unsigned int ms);
 
+/**
+ * 引脚说明: 
+ * 2个共阴数码管
+ * 分别有 A/B/C/D/E/F/G/DP
+ * 分别对应 
+ */
 void main(void)
 {
     /* 初始化显示驱动 */
