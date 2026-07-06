@@ -1,13 +1,13 @@
 /*
  * File:    timer.c
- * Project: 04-timer
+ * Project: 公共模块 - 软件定时器调度
  * MCU:     STC89C52RC (11.0592 MHz)
  * Tool:    PlatformIO + SDCC
- * Brief:   定时器模块封装实现
+ * Brief:   基于定时器0的任务调度器实现（函数指针数组）
  *
  * 内部机制：
- *   - 维护一个 8 项的任务表 tasks[]
- *   - T0 每 2ms 触发一次中断
+ *   - 维护一个 TIMER_MAX_TASKS 项的任务表 tasks[]
+ *   - T0 每 TIMER_TICK_US 触发一次中断
  *   - ISR 中遍历 tasks[]，调用所有 enabled 的任务函数
  */
 
@@ -17,11 +17,14 @@
  * 内部存储
  * ============================================================ */
 
-/* 任务表（静态分配，省 RAM） */
 static Timer_Task tasks[TIMER_MAX_TASKS];
-
-/* 已注册任务数（仅用于遍历时减少循环次数） */
 static unsigned char task_count = 0;
+
+/* 扫描参数（由 timer.h 的宏自动计算） */
+#define FOSC_HZ       11059200UL
+#define T0_PRESCALER  12
+#define TICK_TICKS    ((unsigned int)(FOSC_HZ / 1000000UL * TIMER_TICK_US / T0_PRESCALER))
+#define TICK_RELOAD   (65536UL - TICK_TICKS)
 
 /* ============================================================
  * 初始化
@@ -37,12 +40,11 @@ void Timer_Init(void)
     }
     task_count = 0;
 
-    /* 定时器0：模式1，2ms @ 11.0592MHz */
-    /* 计数次数 = 2ms / (12/11059200) = 18432 */
+    /* 定时器0：模式1，TIMER_TICK_US @ 11.0592MHz */
     TMOD &= 0xF0;
     TMOD |= 0x01;
-    TH0 = (65536 - 18432) / 256;
-    TL0 = (65536 - 18432) % 256;
+    TH0 = (unsigned char)(TICK_RELOAD >> 8);
+    TL0 = (unsigned char)(TICK_RELOAD & 0xFF);
     ET0 = 1;
     TR0 = 1;
     EA  = 1;
@@ -95,7 +97,7 @@ void Timer_Unregister(unsigned char id)
     tasks[id].func = 0;
     tasks[id].enabled = 0;
 
-    /* 收缩 task_count（如果最高位的任务被清掉） */
+    /* 收缩 task_count */
     if (id + 1 == task_count) {
         while (task_count > 0 && tasks[task_count - 1].func == 0) {
             task_count--;
@@ -117,7 +119,7 @@ void Timer0_ISR(void) __interrupt(1)
         }
     }
 
-    /* 重装 2ms 初值 */
-    TH0 = (65536 - 18432) / 256;
-    TL0 = (65536 - 18432) % 256;
+    /* 重装初值 */
+    TH0 = (unsigned char)(TICK_RELOAD >> 8);
+    TL0 = (unsigned char)(TICK_RELOAD & 0xFF);
 }

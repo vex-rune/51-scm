@@ -14,18 +14,8 @@
  *   6. Scrolling text "Hi! Luke, I am a robot."
  */
 
-#include "matrix.h"
-
-/* Software delay (rough, ~1ms per inner loop at 11.0592MHz) */
-static void DelayMs(unsigned int ms)
-{
-    unsigned int i, j;
-    for (i = 0; i < ms; i++) {
-        for (j = 0; j < 120; j++) {
-            ;
-        }
-    }
-}
+#include <matrix.h>
+#include <delay.h>
 
 /* ============================================================
  * 8x8 picture data (one byte per row, bit=1 means LED on)
@@ -99,9 +89,11 @@ static const __code unsigned char FONT_DATA[] = {
  * Main
  * ============================================================ */
 void main(void)
-{
+{    
+    P34 = 1; // led 开
+    P35 = 0; // 点阵显示 开
+    P36 = 1; // 数码管 关
     Matrix_Init();
-    Matrix_ScrollInit();
 
     while (1) {
         /* 1. Self test */

@@ -126,13 +126,19 @@ void Smg_Init(void)
  * ============================================================ */
 void Smg_Timer0_ISR(void) __interrupt(1)
 {
-    /* 1) 先输出新段码（此时仍选中上一位，但段码先到位） */
-    SMG_SEG_PORT = smg_buf[cur_digit];
+    /* 计算本次要显示的位（cur_digit 已在上一轮递增过） */
+    unsigned char now = cur_digit;
 
-    /* 2) 切换位选到新位（138低有效，切换瞬间两段码短暂交叠） */
-    SEL_WRITE(cur_digit);
+    /* 1) 关闭段码（消隐，避免位选切换时鬼影） */
+    SMG_SEG_PORT = 0x00;
 
-    /* 切换到下一位 */
+    /* 2) 切换位选到 now */
+    SEL_WRITE(now);
+
+    /* 3) 输出新段码（位选已稳定，不会撞到错位） */
+    SMG_SEG_PORT = smg_buf[now];
+
+    /* 切到下一位 */
     cur_digit++;
     if (cur_digit >= SMG_DIGITS) {
         cur_digit = 0;
