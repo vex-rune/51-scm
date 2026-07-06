@@ -3,9 +3,9 @@
  * Project: 02-8digit-display
  * MCU:     STC89C52RC (11.0592 MHz)
  * Tool:    PlatformIO + SDCC
- * Brief:   8位数码管主程序
+ * Brief:   8位共阴极数码管主程序
  *
- * 功能：显示数字 12345678，1秒后变化
+ * 功能：数码管动态扫描显示 12345678
  */
 
 #include "display.h"
@@ -13,48 +13,21 @@
 /* 延时函数声明（复用 01-LED-Blink 的 delay.c） */
 extern void DelayMs(unsigned int ms);
 
-/**
- * 引脚说明: 
- * 2个共阴数码管
- * 分别有 A/B/C/D/E/F/G/DP
- * 分别对应 
- */
 void main(void)
 {
-    /* 初始化显示驱动 */
+    /* 使能控制 */
+    P34 = 0; // led 关
+    P35 = 1; // 点阵显示 关
+    P36 = 0; // 数码管 开（138使能 + DIG8释放 + 245 DIR有效）
+
+    /* 初始化显示驱动（启动定时器0中断扫描） */
     Display_Init();
 
-    /* 自检 */
-    Display_SelfTest();
-    DelayMs(1000);
-
-    /* 清屏 */
-    Display_Clear();
-    DelayMs(500);
+    /* 全量更新显示缓冲区 */
+    Display_UpdateBuf("12345678");
 
     while (1) {
-        /* 显示数字 12345678 */
-        Display_ShowUInt(12345678UL);
-        DelayMs(1000);
-
-        /* 显示数字 -9999 */
-        Display_ShowInt(-9999);
-        DelayMs(1000);
-
-        /* 显示 HEX: A5E7 */
-        Display_SetDigit(4, 0x0A);   /* A */
-        Display_SetDigit(5, 0x05);   /* 5 */
-        Display_SetDigit(6, 0x0E);   /* E */
-        Display_SetDigit(7, 0x07);   /* 7 */
-        DelayMs(1000);
-
-        /* 滚动显示 0~99999999 */
-        {
-            unsigned long n;
-            for (n = 0; n <= 99999999UL; n += 11111UL) {
-                Display_ShowUInt(n);
-                DelayMs(200);
-            }
-        }
+        /* 动态扫描由定时器0中断驱动，无需额外处理 */
+        DelayMs(10);
     }
 }

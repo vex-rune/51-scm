@@ -20,8 +20,10 @@ extern void DelayMs(unsigned int ms);
  */
 void main(void)
 {
-    // 初始化P34为输出模式
-    P34 = 1;
+    // 初始化P34为输出模式: 34=1 启动led, 35=0 启动点阵显示, 36=1 启动数码管(74HC245TS)
+    P34 = 1; // led 开
+    P35 = 1; // 点阵显示 关
+    P36 = 0; // 数码管 关
     unsigned char led_mask = 0xFE;  // 11111110，最低位点亮
     while (1)
     {

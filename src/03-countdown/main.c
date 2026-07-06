@@ -1,21 +1,3 @@
-/*
- * File:    main.c
- * Project: 03-countdown
- * MCU:     STC89C52RC (11.0592 MHz)
- * Tool:    PlatformIO + SDCC
- * Brief:   8位数码管倒计时器
- *
- * 功能：从 99999999 开始每秒减 1，归零后停止。
- *       定时器0 -> 2ms 显示扫描（display.c）
- *       定时器1 -> 50ms×20 = 1秒（本文件）
- *
- * 硬件连接：
- *   P1.0 -> 74HC595 DATA (DS)
- *   P1.1 -> 74HC595 CLK  (SH_CP)
- *   P1.2 -> 74HC595 LATCH(ST_CP)
- *   P2.0~P2.7 -> 位选 PNP 三极管基极
- */
-
 #include "display.h"
 
 /* ============================================================
