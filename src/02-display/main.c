@@ -8,10 +8,8 @@
  * 功能：数码管动态扫描显示 12345678
  */
 
-#include "display.h"
-
-/* 延时函数声明（复用 01-LED-Blink 的 delay.c） */
-extern void DelayMs(unsigned int ms);
+#include <smg.h>
+#include <delay.h>
 
 void main(void)
 {
@@ -20,11 +18,11 @@ void main(void)
     P35 = 1; // 点阵显示 关
     P36 = 0; // 数码管 开（138使能 + DIG8释放 + 245 DIR有效）
 
-    /* 初始化显示驱动（启动定时器0中断扫描） */
-    Display_Init();
+    /* 初始化数码管（启动定时器0中断扫描） */
+    Smg_Init();
 
     /* 全量更新显示缓冲区 */
-    Display_UpdateBuf("12345678");
+    Smg_UpdateBuf("12345678");
 
     while (1) {
         /* 动态扫描由定时器0中断驱动，无需额外处理 */

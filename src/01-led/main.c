@@ -10,9 +10,7 @@
  */
 
 #include <stc89c52rc.h>
-
-/* 延时函数声明 */
-extern void DelayMs(unsigned int ms);
+#include <delay.h>
 
 /**
  * 引脚说明: 

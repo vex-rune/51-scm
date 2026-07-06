@@ -1,8 +1,8 @@
 /*
  * File:    delay.h
- * Project: 01-LED-Blink
+ * Project: 公共模块
  * Tool:    PlatformIO + SDCC
- * Brief:   延时函数声明
+ * Brief:   毫秒级阻塞延时函数声明（基于 11.0592 MHz 主频校准）
  */
 
 #ifndef __DELAY_H__
