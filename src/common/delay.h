@@ -14,4 +14,10 @@
  */
 void DelayMs(unsigned int ms);
 
+/**
+ * @brief  微秒级阻塞延时（基于 11.0592 MHz 主频校准）
+ * @param  us  延时微秒数（约 0 ~ 255）
+ */
+void DelayUs(unsigned char us);
+
 #endif /* __DELAY_H__ */

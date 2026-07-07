@@ -26,3 +26,14 @@ void DelayMs(unsigned int ms)
         Delay1ms();
     }
 }
+
+void DelayUs(unsigned char us)
+{
+    // 11.0592MHz: 1 机器周期 ≈ 1.085us
+    // 每个 do-while 循环约 4 周期 ≈ 4.3us
+    do {
+        unsigned char i;
+        i = 2;
+        while (--i);
+    } while (--us);
+}
