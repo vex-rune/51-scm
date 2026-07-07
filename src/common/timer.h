@@ -24,7 +24,7 @@
  * 可调参数
  * ============================================================ */
 #define TIMER_MAX_TASKS  8        /* 最多同时注册的任务数 */
-#define TIMER_TICK_US    500      /* 调度周期（us），500us=2kHz */
+#define TIMER_TICK_US    2000     /* 调度周期（us） */
 
 /* 任务 ID：0 ~ TIMER_MAX_TASKS-1 为合法值，0xFF 表示无效 */
 #define TIMER_INVALID_ID  0xFF
