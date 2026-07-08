@@ -170,4 +170,19 @@ void OLED_WriteCommand(const unsigned char *command, unsigned char length);
  */
 void OLED_WriteData(const unsigned char *data, unsigned char length);
 
+/**
+ * @brief  设置当前页和列地址（页寻址模式）
+ * @param  page  页索引 (0-7)
+ * @param  col   列起始位置 (0-127)
+ */
+void OLED_SetPage(unsigned char page, unsigned char col);
+
+/**
+ * @brief  在指定页写入 2 页内容 (256 字节, 自动拆分到 page 和 page+1)
+ * @param  page  起始页 (0-6, 因为要写 2 页所以最大 6)
+ * @param  col   列起始位置 (0-127)
+ * @param  data  数据数组 (256 字节: data[0..127] 写 page, data[128..255] 写 page+1)
+ */
+void OLED_WriteDataToRegion(unsigned char page, unsigned char col, const unsigned char *data);
+
 #endif /* __OLED_H__ */

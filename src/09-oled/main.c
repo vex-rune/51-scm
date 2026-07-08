@@ -43,6 +43,10 @@ void main(void)
     // 显示的内容
     OLED_WriteData(date_bytes + 8,8);
 
+
+    // 显示的内容
+    OLED_WriteDataToRegion(2, 1, date_bytes);
+
     while (1) {
         /* 主循环空闲 */
     }
