@@ -10,9 +10,11 @@
 #ifndef __I2C_H__
 #define __I2C_H__
 
-/* I2C 引脚定义 - 在这里修改以适配不同硬件 */
-#define I2C_SCL P17
-#define I2C_SDA P16
+/* I2C 引脚定义 - 在这里修改以适配不同硬件, 有默认值, 也接受修改 */
+#define I2C_SCL P17  /* 默认值 */
+#define I2C_SDA P16  /* 默认值 */
+
+
 
 /* I2C 速度控制（延时微秒） */
 #define I2C_DELAY_US 5

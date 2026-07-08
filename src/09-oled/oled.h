@@ -1,0 +1,173 @@
+/*
+ * File:    oled.h
+ * Project: 09-oled
+ * MCU:     STC89C52RC
+ * Brief:   SSD1315 OLED 显示屏驱动
+ *
+ * 提供所有 SSD1315 命令、寻址模式等的常量定义
+ */
+
+#ifndef __OLED_H__
+#define __OLED_H__
+
+/* ============================================================
+ * I2C 地址
+ * ============================================================ */
+
+/* SSD1315 7位从机地址: 0x3C, 写地址 = 0x3C<<1 = 0x78 */
+#define OLED_I2C_ADDR         0x78
+
+/* 控制字节: 紧接的字节是命令或数据 */
+#define OLED_CTRL_CMD         0x00
+#define OLED_CTRL_DATA        0x40
+
+/* ============================================================
+ * 基础命令 (Fundamental Commands)
+ * ============================================================ */
+
+/* 设置对比度 (后接 1 字节, 0x00~0xFF) */
+#define OLED_CMD_CONTRAST     0x81
+
+/* 整屏显示模式 (A4=跟随RAM, A5=强制全亮) */
+#define OLED_CMD_ENTIRE_ON    0xA4
+#define OLED_CMD_ENTIRE_FORCE 0xA5
+
+/* 正常/反色显示 */
+#define OLED_CMD_NORMAL       0xA6
+#define OLED_CMD_INVERSE      0xA7
+
+/* 开关显示 */
+#define OLED_CMD_DISPLAY_OFF  0xAE
+#define OLED_CMD_DISPLAY_ON   0xAF
+
+/* ============================================================
+ * 滚动命令 (未实现, 仅列出)
+ * ============================================================ */
+
+#define OLED_CMD_RIGHT_HOR_SCROLL      0x26
+#define OLED_CMD_LEFT_HOR_SCROLL       0x27
+#define OLED_CMD_VERT_RIGHT_HOR_SCROLL 0x29
+#define OLED_CMD_VERT_LEFT_HOR_SCROLL  0x2A
+#define OLED_CMD_DEACTIVATE_SCROLL     0x2E
+#define OLED_CMD_ACTIVATE_SCROLL       0x2F
+#define OLED_CMD_SET_VERTICAL_AREA     0xA3
+
+/* ============================================================
+ * 地址设置命令
+ * ============================================================ */
+
+/* 设置列地址低 4 位 (0x00 | lowNibble) */
+#define OLED_CMD_COL_LOW       0x00
+
+/* 设置列地址高 4 位 (0x10 | highNibble) */
+#define OLED_CMD_COL_HIGH      0x10
+
+/* 设置页地址 (0xB0 | page, page 0~7) */
+#define OLED_CMD_PAGE_ADDR     0xB0
+
+/* 设置显示起始行 (0x40 | line, line 0~63) */
+#define OLED_CMD_START_LINE    0x40
+
+/* ============================================================
+ * 硬件配置命令
+ * ============================================================ */
+
+/* 设置寻址模式 (后接 1 字节模式值) */
+#define OLED_CMD_ADDR_MODE     0x20
+
+/* 寻址模式参数 */
+#define OLED_ADDR_MODE_PAGE       0x00   /* 页寻址 (默认) */
+#define OLED_ADDR_MODE_HORIZONTAL 0x01   /* 水平寻址 */
+#define OLED_ADDR_MODE_VERTICAL   0x02   /* 垂直寻址 */
+
+/* 设置列地址范围 (水平/垂直模式, 后接 起始列, 结束列) */
+#define OLED_CMD_COL_RANGE     0x21
+
+/* 设置页地址范围 (水平/垂直模式, 后接 起始页, 结束页) */
+#define OLED_CMD_PAGE_RANGE    0x22
+
+/* Segment 重映射 (0xA0=反置, 0xA1=正常) */
+#define OLED_CMD_SEG_REMAP_NORM  0xA1
+#define OLED_CMD_SEG_REMAP_REV   0xA0
+
+/* COM 输出扫描方向 (0xC0=正常, 0xC8=反置) */
+#define OLED_CMD_COM_SCAN_NORM  0xC8
+#define OLED_CMD_COM_SCAN_REV   0xC0
+
+/* 设置多路复用率 (后接 1 字节, 1~64, 64 行屏用 0x3F) */
+#define OLED_CMD_MUX_RATIO     0xA8
+#define OLED_MUX_64            0x3F
+#define OLED_MUX_32            0x1F
+
+/* 设置 COM 引脚硬件配置 (后接 1 字节) */
+#define OLED_CMD_COM_PINS      0xDA
+#define OLED_COM_PINS_SEQ      0x02   /* 顺序 COM */
+#define OLED_COM_PINS_ALT      0x12   /* 交替 COM (推荐) */
+
+/* 设置显示偏移 (后接 1 字节 0~63) */
+#define OLED_CMD_OFFSET        0xD3
+#define OLED_OFFSET_0          0x00
+
+/* 设置时钟分频/振荡器频率 (后接 1 字节, 高4位频率, 低4位分频) */
+#define OLED_CMD_CLOCK         0xD5
+#define OLED_CLOCK_DEFAULT     0x80
+
+/* 设置预充电周期 (后接 1 字节) */
+#define OLED_CMD_PRECHARGE     0xD9
+#define OLED_PRECHARGE_DEFAULT 0xF1
+
+/* 设置 VCOMH 电压 (后接 1 字节 0x00~0x07) */
+#define OLED_CMD_VCOMH         0xDB
+#define OLED_VCOMH_DEFAULT     0x40
+
+/* 电荷泵设置 (后接 1 字节: 0x10=关, 0x14=开) */
+#define OLED_CMD_CHARGEPUMP    0x8D
+#define OLED_CHARGEPUMP_OFF    0x10
+#define OLED_CHARGEPUMP_ON     0x14
+
+/* NOP 命令 */
+#define OLED_CMD_NOP           0xE3
+
+/* ============================================================
+ * 常用参数值
+ * ============================================================ */
+
+#define OLED_CONTRAST_DEFAULT  0xCF
+
+/* ============================================================
+ * 显示尺寸
+ * ============================================================ */
+
+#define OLED_WIDTH             128
+#define OLED_HEIGHT            64
+#define OLED_PAGES             (OLED_HEIGHT / 8)   /* 8 */
+
+/* ============================================================
+ * API
+ * ============================================================ */
+
+/**
+ * @brief  初始化 SSD1315
+ */
+void OLED_Init(void);
+
+/**
+ * @brief  清空整个屏幕
+ */
+void OLED_Clear(void);
+
+/**
+ * @brief  向 SSD1315 发送多个命令
+ * @param  command 命令数组
+ * @param  length  命令个数
+ */
+void OLED_WriteCommand(const unsigned char *command, unsigned char length);
+
+/**
+ * @brief  向 SSD1315 发送多个数据
+ * @param  data   数据数组
+ * @param  length 数据个数
+ */
+void OLED_WriteData(const unsigned char *data, unsigned char length);
+
+#endif /* __OLED_H__ */

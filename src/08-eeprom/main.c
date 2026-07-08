@@ -17,6 +17,7 @@
 #include <delay.h>
 #include "eeprom.h"  /* 直接调用 EEPROM_ByteWrite / EEPROM_RandomRead 等接口, 无需向后兼容宏 */
 #include "uart.h"
+#include "log.h"
 
 #define LED P00
 
@@ -230,10 +231,14 @@ void main(void)
     LED = 1;
 
     EEPROM_Init();
+    /* 注意: 这里仍然显式调用 Uart_Init() 以保持原行为
+     * 如果注释掉, Log() 会自动初始化 */
     Uart_Init();
 
-    Uart_SendStr("\n=== 08-eeprom (5 methods) ===\n");
-    Uart_SendStr("Send '?' for help, 'T' to test all\n> ");
+    /* 测试新的 Log API - 自动追加 \r\n */
+    Log("=== 08-eeprom Ready ===");
+    Log("Build with Log API, auto-init test...");
+    Log("Send '?' for help, 'T' to test all");
 
     while (1) {
         poll_cmd();
