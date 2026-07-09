@@ -1,10 +1,12 @@
 /*
  * File:    oled.h
- * Project: 09-oled
+ * Project: 公共模块 - SSD1315 OLED 显示屏驱动
  * MCU:     STC89C52RC
- * Brief:   SSD1315 OLED 显示屏驱动
+ * Brief:   基于 i2c.c 的 SSD1315 OLED 高层驱动
  *
  * 提供所有 SSD1315 命令、寻址模式等的常量定义
+ *
+ * 依赖: i2c.c
  */
 
 #ifndef __OLED_H__
@@ -171,6 +173,13 @@ void OLED_WriteCommand(const unsigned char *command, unsigned char length);
 void OLED_WriteData(const unsigned char *data, unsigned char length);
 
 /**
+ * @brief  写入字模数据 (每字节做位反转, 适配 SSD1315 bit0=顶行)
+ * @note   字库采用 bit7=顶行 约定, 与 SSD1315 GDDRAM (bit0=顶行) 相反.
+ *         绘制字符/图形等需要"高位在上"的字模时使用此函数.
+ */
+void OLED_WriteGlyphData(const unsigned char *data, unsigned char length);
+
+/**
  * @brief  设置当前页和列地址（页寻址模式）
  * @param  page  页索引 (0-7)
  * @param  col   列起始位置 (0-127)
@@ -184,5 +193,40 @@ void OLED_SetPage(unsigned char page, unsigned char col);
  * @param  data  数据数组 (256 字节: data[0..127] 写 page, data[128..255] 写 page+1)
  */
 void OLED_WriteDataToRegion(unsigned char page, unsigned char col, const unsigned char *data);
+
+/* ============================================================
+ * ASCII 字模 (8x16, 1 字节/列, 高位在上)
+ * ============================================================
+ *
+ * 字符集: ASCII 0x20 (' ') 至 0x7E ('~') (共 95 字符)
+ * 尺寸:   8 列宽 × 16 行高, 每个字符 16 字节, 跨两页显示
+ * 取模:   段列式 - 每字节对应一列 8 行像素, bit7=顶行, bit0=底行
+ *         data[0..7]  -> 上半页 (page)
+ *         data[8..15] -> 下半页 (page+1)
+ * 索引:   使用 OLED_AsciiIndex() 取得字符在字模表中的下标
+ */
+#define OLED_ASCII_WIDTH   8
+#define OLED_ASCII_HEIGHT  16
+#define OLED_ASCII_BYTES   16
+
+/**
+ * @brief  把字符映射到 OledAscii 表中的下标
+ * @return 0..94 对应 ASCII 0x20..0x7E; 不在范围内返回 -1
+ */
+int OLED_AsciiIndex(char c);
+
+/**
+ * @brief  在指定 (page, col) 绘制单个 ASCII 字符 (8x16)
+ * @param  page  起始页 (0-6, 因为字符高 16 行跨两页)
+ * @param  col   列起始位置 (0-127)
+ * @param  ch    待绘制的字符 (不在字模表内则不绘制)
+ */
+void OLED_ShowAsciiAt(unsigned char page, unsigned char col, char ch);
+
+/**
+ * @brief  在指定 (page, col) 显示以 '\0' 结尾的字符串
+ * @note   不支持换行, 越界自动截断; 不在字模表内的字符会被跳过
+ */
+void OLED_ShowString(unsigned char page, unsigned char col, const char *str);
 
 #endif /* __OLED_H__ */

@@ -11,13 +11,6 @@
 
 void main(void)
 {
-    OLED_Init();
-    OLED_Clear();
-
-    OLED_ShowString(0, 0, "0123456789");
-    OLED_ShowString(2, 0, "ABCDEFGHIJKLM");
-    OLED_ShowString(4, 0, "abcdefghijklm");
-    OLED_ShowString(6, 0, "Hello 51!");
 
     while (1) {
         /* 主循环空闲 */
