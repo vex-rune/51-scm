@@ -236,7 +236,7 @@ void OLED_ShowString(
 }
 
 /* 字模前向声明, 使用它的函数写在下方 */
-extern const unsigned char OledAscii[][OLED_ASCII_BYTES];
+extern const unsigned char __code OledAscii[][OLED_ASCII_BYTES];
 
 /**
  * @brief  把字符映射到 OledAscii 表中的下标
@@ -267,7 +267,7 @@ void OLED_ShowAsciiAt(
     char ch)
 {
     int idx = OLED_AsciiIndex(ch);
-    const unsigned char *glyph;
+    const unsigned char __code *glyph;
 
     if (idx < 0) {
         return;   /* 不在字模表内, 跳过 */
@@ -285,16 +285,14 @@ void OLED_ShowAsciiAt(
 }
 /*
  * @brief  ASCII 字符字体数据 (ASC8x16E 字库, 95 字符, 16 字节/字符)
- * const  C 标准关键字，声明数据 只读
- *       编译器会把 const 大数组自动放进 Flash/ROM，节省 RAM
- *       不要再用 Keil 的 code 关键字，SDCC 不识别
+ * __code SDCC 关键字，强制将数据放入 Flash/ROM 区域，不占用 RAM
  *
  * 取模: 纵向 8 点上高位 (bit7=顶行)
  *   data[0..7]  -> 上半页 (page)
  *   data[8..15] -> 下半页 (page+1)
  * 索引: 表下标 = ASCII - 0x20  (0=' ' ... 94='~')
  */
-const unsigned char OledAscii[][OLED_ASCII_BYTES] =
+const unsigned char __code OledAscii[][OLED_ASCII_BYTES] =
 {
     /* ' ' (0x20) */ {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00},
     /* '!' (0x21) */ {0x00,0x00,0x00,0x3F,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x98,0x00,0x00,0x00,0x00},

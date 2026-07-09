@@ -3,7 +3,7 @@
  * Project: 公共模块 - 8x8 LED 点阵驱动
  * MCU:     STC89C52RC (11.0592 MHz)
  * Tool:    PlatformIO + SDCC
- * Brief:   74HC595 驱动 8x8 LED 点阵矩阵
+ * Brief:   74HC595 驱动 8x8 LED 点阵矩阵 - 简化版
  */
 
 #ifndef __MATRIX_H__
@@ -12,8 +12,7 @@
 #include <stc89c52rc.h>
 #include "delay.h"
 
-// 引脚定义（默认配置，可由 Matrix_Init 重新设置）
-// 在 Matrix_Init 前修改这些宏即可改变引脚
+// 引脚定义
 #ifndef MATRIX_EN
 #define MATRIX_EN  P35   // 使能引脚
 #endif
@@ -30,14 +29,10 @@
 #define MATRIX_ROW P0    // 行选通
 #endif
 
-// 配置参数
-extern unsigned char FLIP_HORIZONTAL;
-extern unsigned char FLIP_VERTICAL;
-extern unsigned char ROTATE;
-
 // API
 void Matrix_Init(void);
 void Matrix_SetBuffer(const unsigned char *buffer);
+void Matrix_SetBufferCode(const unsigned char __code *buffer);
 void Matrix_Scan(void);
 
 #endif /* __MATRIX_H__ */

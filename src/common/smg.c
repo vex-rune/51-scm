@@ -70,12 +70,10 @@ const unsigned char SEG_CODE[SEG_CODE_COUNT] = {
 };
 
 /* ============================================================
- * 扫描参数（由 smg.h 的宏自动计算）
+ * 扫描参数
  * ============================================================ */
-#define FOSC_HZ       11059200UL                       /* 系统时钟 */
-#define T0_PRESCALER  12                               /* 定时器0 预分频 */
-#define SCAN_TICKS    ((unsigned int)(FOSC_HZ / 1000000UL * SMG_SCAN_US / T0_PRESCALER))
-#define SCAN_RELOAD   (65536UL - SCAN_TICKS)           /* 16位定时器初值 */
+/* 扫描间隔计数：假设调用周期 250us，要达到 SMG_SCAN_US 需要计数 */
+#define SMG_SCAN_COUNT  (SMG_SCAN_US / 250)  /* 例如 1000us/250us = 4 */
 
 /* SMG_SEL_A/B/C 在 SMG_SEL_PORT 中的位掩码 */
 #define SEL_A_BIT  0x08   /* P1.3 = bit3 */
@@ -92,6 +90,14 @@ unsigned char smg_buf[SMG_DIGITS];
 
 /* 当前扫描位索引（0~SMG_DIGITS-1） */
 static unsigned char cur_digit = 0;
+
+/* 互斥控制标志（由 main.c 设置） */
+extern unsigned char g_smg_enabled;
+
+/* ============================================================
+ * 内部状态
+ * ============================================================ */
+static unsigned char scan_counter = 0;
 
 /* ============================================================
  * 初始化
@@ -111,22 +117,27 @@ void Smg_Init(void)
         smg_buf[i] = 0x00;
     }
 
-    /* 配置定时器0：单管扫描间隔 = SMG_SCAN_US 微秒 */
-    TMOD &= 0xF0;
-    TMOD |= 0x01;
-    TH0 = (unsigned char)(SCAN_RELOAD >> 8);
-    TL0 = (unsigned char)(SCAN_RELOAD & 0xFF);
-    ET0 = 1;
-    TR0 = 1;
-    EA = 1;
+    scan_counter = 0;
+    cur_digit = 0;
 }
 
 /* ============================================================
- * 定时器0中断（单管扫描一次）
+ * 数码管扫描函数（供 timer 模块调用，建议 250us 周期）
  * ============================================================ */
-void Smg_Timer0_ISR(void) __interrupt(1)
+void Smg_Scan(void)
 {
-    /* 计算本次要显示的位（cur_digit 已在上一轮递增过） */
+    /* 互斥控制 - 只有数码管激活时才扫描 */
+    if (!g_smg_enabled) {
+        return;
+    }
+
+    scan_counter++;
+    if (scan_counter < SMG_SCAN_COUNT) {
+        return;  /* 未达到扫描间隔，直接返回 */
+    }
+    scan_counter = 0;
+
+    /* 计算本次要显示的位 */
     unsigned char now = cur_digit;
 
     /* 1) 关闭段码（消隐，避免位选切换时鬼影） */
@@ -143,10 +154,6 @@ void Smg_Timer0_ISR(void) __interrupt(1)
     if (cur_digit >= SMG_DIGITS) {
         cur_digit = 0;
     }
-
-    /* 重装定时初值 */
-    TH0 = (unsigned char)(SCAN_RELOAD >> 8);
-    TL0 = (unsigned char)(SCAN_RELOAD & 0xFF);
 }
 
 /* ============================================================

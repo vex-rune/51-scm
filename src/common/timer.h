@@ -23,8 +23,8 @@
 /* ============================================================
  * 可调参数
  * ============================================================ */
-#define TIMER_MAX_TASKS  8        /* 最多同时注册的任务数 */
-#define TIMER_TICK_US    2000     /* 调度周期（us） */
+#define TIMER_MAX_TASKS  6        /* 最多同时注册的任务数 */
+#define TIMER_TICK_US    250      /* 调度周期（us）- 250us 提高刷新率 */
 
 /* 任务 ID：0 ~ TIMER_MAX_TASKS-1 为合法值，0xFF 表示无效 */
 #define TIMER_INVALID_ID  0xFF

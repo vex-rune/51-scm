@@ -36,7 +36,7 @@
  * 可调参数（调试时只需修改这两行）
  * ============================================================ */
 #define SMG_DIGITS    8        /* 数码管位数 */
-#define SMG_SCAN_US   2000     /* 单管点亮时长（微秒） */
+#define SMG_SCAN_US   1000     /* 单管点亮时长（微秒）- 加快刷新 */
 
 /* 推荐范围：
  *   SMG_DIGITS  = 1~16      （实际硬件位数）
@@ -88,15 +88,15 @@ extern unsigned char smg_buf[SMG_DIGITS];
 
 /**
  * @brief  初始化数码管显示驱动
- * @note   占用定时器0，配置为 SMG_SCAN_US 中断，自动扫描显示
+ * @note   不占用定时器，需要配合 timer 模块使用
  */
 void Smg_Init(void);
 
 /**
- * @brief  定时器0中断服务程序（动态扫描）
- * @note   用户不应直接调用，由定时器中断自动触发
+ * @brief  数码管动态扫描函数（供 timer 模块调用）
+ * @note   需要在 timer 模块中注册此函数，建议 500us 调用一次
  */
-void Smg_Timer0_ISR(void) __interrupt(1);
+void Smg_Scan(void);
 
 /**
  * @brief  写入显示缓冲区
